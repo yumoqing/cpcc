@@ -1,0 +1,179 @@
+{
+    "id": "cpcworker_tbl",
+    "widgettype": "Tabular",
+    "options": {
+        "title": "集群实时节点",
+        "description":"显示集群中所有实时节点信息",
+        "css": "card",
+        "editable": {
+            "new_data_url": "{{entire_url('add_cpcworker.dspy')}}",
+            "delete_data_url": "{{entire_url('delete_cpcworker.dspy')}}",
+            "update_data_url": "{{entire_url('update_cpcworker.dspy')}}"
+        },
+        "data_url": "{{entire_url('./get_cpcworker.dspy')}}",
+        "data_method": "GET",
+        "data_params": {{json.dumps(params_kw, indent=4, ensure_ascii=False)}},
+        "row_options": {
+            "browserfields": {
+                "exclouded": [
+                    "id",
+                    "cpcid",
+                    "clusterid"
+                ],
+                "alters": {}
+            },
+            "editexclouded": [
+                "id",
+                "cpcid",
+                "clusterid"
+            ],
+            "fields": [
+                {
+                    "name": "node_internalip",
+                    "title": "内网IP",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 6,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "内网IP"
+                },
+                {
+                    "name": "node_name",
+                    "title": "主机名",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 15,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "主机名"
+                },
+                {
+                    "name": "node_status",
+                    "title": "运行状态",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 5,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "运行状态"
+                },
+                {
+                    "name": "id",
+                    "title": "id",
+                    "type": "str",
+                    "length": 32,
+                    "cwidth": 10,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "id"
+                },
+                {
+                    "name": "cpcid",
+                    "title": "算力中心id",
+                    "type": "str",
+                    "length": 32,
+                    "nullable": "no",
+                    "cwidth": 10,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "算力中心id"
+                },
+                {
+                    "name": "node_role",
+                    "title": "节点角色",
+                    "type": "str",
+                    "length": 32,
+                    "nullable": "no",
+                    "cwidth": 8,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "节点角色"
+                },
+                {
+                    "name": "node_age",
+                    "title": "运行时长",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 5,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "运行时长"
+                },
+                {
+                    "name": "node_version",
+                    "title": "kubernetes版本",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 8,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "kubernetes版本"
+                },
+                {
+                    "name": "node_cpurate",
+                    "title": "CPU占用率",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 6,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "CPU占用率"
+                },
+                {
+                    "name": "node_memrate",
+                    "title": "内存占用率",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 6,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "内存占用率"
+                },
+                {
+                    "name": "node_osversion",
+                    "title": "操作系统",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 10,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "操作系统"
+                },  
+                {
+                    "name": "node_containeruntime",
+                    "title": "容器运行时版本",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 10,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "容器运行时"
+                },
+                {
+                    "name": "node_kernelversion",
+                    "title": "内核版本",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 10,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "内核版本"
+                },
+                {
+                    "name": "node_externalip",
+                    "title": "外网IP",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 8,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "外网IP"
+                }
+            ]
+        },
+        "page_rows": 160,
+        "cache_limit": 5
+    },
+    "binds": []
+}

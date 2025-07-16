@@ -1,0 +1,13 @@
+{
+    "tblname":"cpccluster",
+    "params":{
+        "browserfields": {
+            "exclouded": ["id", "cpcid"],
+            "alters": {}
+        },
+        "editexclouded": [
+            "id", "cpcid"
+        ]
+    }
+}
+

@@ -1,0 +1,83 @@
+
+ns = params_kw.copy()
+
+
+debug(f'get_components.dspy:{ns=}')
+if not ns.get('page'):
+    ns['page'] = 1 
+if not ns.get('sort'):
+
+	ns['sort'] = 'id'
+
+
+sql = '''select a.*, b.ccatelogid_text
+from (select * from components where 1=1 [[filterstr]]) a left join (select k as ccatelogid, 
+			v as ccatelogid_text from appcodes_kv where parentid='ccatelog') b on a.ccatelogid = b.ccatelogid'''
+
+filterjson = params_kw.get('data_filter')
+if not filterjson:
+	fields = [ f['name'] for f in [
+    {
+        "name": "id",
+        "title": "id",
+        "type": "str",
+        "length": 32
+    },
+    {
+        "name": "name",
+        "title": "名称",
+        "type": "str",
+        "length": 255
+    },
+    {
+        "name": "ccatelogid",
+        "title": "部件分类",
+        "type": "str",
+        "length": 255
+    },
+    {
+        "name": "cmodel",
+        "title": "型号",
+        "type": "str",
+        "length": 255
+    },
+    {
+        "name": "unitname",
+        "title": "计量名",
+        "type": "str",
+        "length": 32
+    },
+    {
+        "name": "unitvalue",
+        "title": "计量值",
+        "type": "short"
+    }
+] ]
+	filterjson = default_filterjson(fields, ns)
+filterdic = ns.copy()
+filterdic['filterstr'] = ''
+filterdic['userorgid'] = '${userorgid}$'
+filterdic['userid'] = '${userid}$'
+if filterjson:
+	dbf = DBFilter(filterjson)
+	conds = dbf.gen(ns)
+	if conds:
+		ns.update(dbf.consts)
+		conds = f' and {conds}'
+		filterdic['filterstr'] = conds
+ac = ArgsConvert('[[', ']]')
+vars = ac.findAllVariables(sql)
+NameSpace = {v:'${' + v + '}$' for v in vars if v != 'filterstr' }
+filterdic.update(NameSpace)
+sql = ac.convert(sql, filterdic)
+
+debug(f'{sql=}')
+db = DBPools()
+dbname = await rfexe('get_module_dbname', 'cpcc')
+async with db.sqlorContext(dbname) as sor:
+    r = await sor.sqlPaging(sql, ns) 
+    return r
+return {
+	"total":0,
+	"rows":[]
+}

@@ -1,0 +1,126 @@
+
+ns = params_kw.copy()
+
+
+debug(f'get_cpcnode.dspy:{ns=}')
+if not ns.get('page'):
+    ns['page'] = 1 
+if not ns.get('sort'):
+
+	ns['sort'] = 'id'
+
+
+sql = '''select a.*, b.node_status_text,d.devicetype_text
+from (select * from cpcnode where 1=1 [[filterstr]]) 
+a left join (select k as node_status, v as node_status_text from appcodes_kv where parentid='node_status') 
+b on a.node_status = b.node_status 
+left join (select k as devicetype, v as devicetype_text from appcodes_kv where parentid = 'devicetype') 
+d on a.devicetype = d.devicetype'''
+
+
+filterjson = params_kw.get('data_filter')
+if not filterjson:
+	fields = [ f['name'] for f in [
+    {
+        "name": "id",
+        "title": "id",
+        "type": "str",
+        "length": 32
+    },
+    {
+        "name": "name",
+        "title": "名称",
+        "type": "str",
+        "length": 255
+    },
+    {
+        "name": "devicetype",
+        "title": "设备类型",
+        "type": "str",
+        "length": 1
+    },
+    {
+        "name": "ip",
+        "title": "内网ip",
+        "type": "str",
+        "length": 90
+    },
+    {
+        "name": "sshport",
+        "title": "ssh端口号",
+        "type": "short"
+    },
+    {
+        "name": "adminuser",
+        "title": "管理账号",
+        "type": "str",
+        "length": 99
+    },
+    {
+        "name": "adminpwd",
+        "title": "管理密码",
+        "type": "str",
+        "length": 99
+    },
+    {
+        "name": "cpcid",
+        "title": "算力中心id",
+        "type": "str",
+        "length": 32,
+        "nullable": "no"
+    },
+    {
+        "name": "node_status",
+        "title": "节点状态",
+        "type": "str",
+        "length": 1,
+        "nullable": "yes"
+    },
+    {
+        "name": "clusterid",
+        "title": "所属集群",
+        "type": "long",
+        "length": 32,
+        "nullable": "yes"
+    },
+    {
+        "name": "enable_date",
+        "title": "启用日期",
+        "type": "date",
+        "length": 255
+    },
+    {
+        "name": "export_date",
+        "title": "停用日期",
+        "type": "date",
+        "length": 255
+    }
+] ]
+	filterjson = default_filterjson(fields, ns)
+filterdic = ns.copy()
+filterdic['filterstr'] = ''
+filterdic['userorgid'] = '${userorgid}$'
+filterdic['userid'] = '${userid}$'
+if filterjson:
+	dbf = DBFilter(filterjson)
+	conds = dbf.gen(ns)
+	if conds:
+		ns.update(dbf.consts)
+		conds = f' and {conds}'
+		filterdic['filterstr'] = conds
+ac = ArgsConvert('[[', ']]')
+vars = ac.findAllVariables(sql)
+NameSpace = {v:'${' + v + '}$' for v in vars if v != 'filterstr' }
+filterdic.update(NameSpace)
+sql = ac.convert(sql, filterdic)
+
+debug(f'{sql=}')
+db = DBPools()
+dbname = await rfexe('get_module_dbname', 'cpcc')
+async with db.sqlorContext(dbname) as sor:
+    r = await sor.sqlPaging(sql, ns) 
+    return r
+return {
+	"total":0,
+	"rows":[]
+}

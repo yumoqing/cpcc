@@ -1,0 +1,265 @@
+{
+	"widgettype":"Form",
+	"options":{
+		"title":"新建资源YAML模板",
+		"description":"通过实例化资源YAML，为算力中心的kubernetes集群新增资源实例（注意：kubernetes部分参数值只允许小写，若拼接请以'-'间隔）",
+		"fields":[
+			{
+				"name":"clusterid",
+				"value":"{{params_kw.id}}",
+				"uitype":"hide"
+			},
+			{
+				"name": "source_name",
+				"title": "资源容器名称",
+				"type": "str",
+				"length": 90,
+				"cwidth": 18,
+				"uitype": "str",
+				"datatype": "str",
+				"label": "资源容器名称(可以-分隔)"
+			},
+			{
+				"name": "source_authuser",
+				"title": "资源初始账号",
+				"type": "str",
+				"length": 90,
+				"cwidth": 18,
+				"uitype": "str",
+				"datatype": "str",
+				"label": "资源初始账号"
+			},
+			{
+				"name": "source_authpasswd",
+				"title": "资源初始密码",
+				"type": "str",
+				"length": 90,
+				"cwidth": 18,
+				"uitype": "str",
+				"datatype": "str",
+				"label": "资源初始密码"
+			},
+			{
+				"name": "source_podengine",
+				"label":"资源实例控制器",
+				"data":[
+					{
+						"value":"Deployment",
+						"text":"Deployment"
+					},
+					{
+						"value":"Job",
+						"text":"Job"
+					},
+					{
+						"value":"CronJob",
+						"text":"CronJob"
+					},
+					{
+						"value":"DaemonSet",
+						"text":"DaemonSet"
+					},
+					{
+						"value":"StatefulSet",
+						"text":"StatefulSet"
+					},
+					{
+						"value":"standalone",
+						"text":"standalone"
+					}
+				],
+				"value":"StatefulSet",
+				"uitype":"code"
+			},
+			{
+				"name": "source_replicasetnum",
+				"title": "资源副本个数",
+				"type": "short",
+				"length": 0,
+				"uitype": "int",
+				"cwidth": 18,
+				"datatype": "str",
+				"label": "资源副本个数"
+			},
+			{
+				"name":"instance_type",
+				"label":"资源实例类型",
+				"data":[
+					{
+						"value":"RelationalDB",
+						"text":"关系型数据库"
+					},
+					{
+						"value":"LinuxOS",
+						"text":"Linux操作系统"
+					}
+				],
+				"value":"LinuxOS",
+				"uitype":"code"
+			},
+			{
+				"name":"pod_imagepath",
+				"label":"基础镜像",
+				"data":[
+					{
+						"value":"docker.io/library/mysql:8.0",
+						"text":"docker.io/library/mysql:8.0"
+					},
+					{
+						"value":"docker.io/library/nginx:latest",
+						"text":"docker.io/library/nginx:latest"
+					},
+					{
+						"value":"docker.io/library/ubuntu:22.04",
+						"text":"docker.io/library/ubuntu:22.04"
+					},
+					{
+						"value":"docker.io/jupyter/base-notebook:latest",
+						"text":"docker.io/jupyter/base-notebook:latest"
+					}
+				],
+				"value":"docker.io/library/ubuntu:22.04",
+				"uitype":"code"
+			},
+			{
+				"name": "source_memrate",
+				"title": "资源内存限制",
+				"type": "str",
+				"length": 90,
+				"cwidth": 18,
+				"uitype": "str",
+				"datatype": "str",
+				"label": "资源内存限制(示例:100Mi)"
+			},
+			{
+				"name": "source_cpurate",
+				"title": "资源cpu限制",
+				"type": "str",
+				"length": 90,
+				"cwidth": 18,
+				"uitype": "str",
+				"datatype": "str",
+				"label": "资源cpu限制(示例:100m)"
+			},
+			{
+				"name": "source_selflabel",
+				"title": "资源自身标签",
+				"type": "str",
+				"length": 90,
+				"cwidth": 18,
+				"uitype": "str",
+				"datatype": "str",
+				"label": "资源自身标签(service代理)"
+			},
+			{
+				"name":"source_portmode",
+				"label":"端口映射模式",
+				"data":[
+					{
+						"value":"NodePort",
+						"text":"NodePort"
+					},
+					{
+						"value":"LoadBalancer",
+						"text":"LoadBalancer"
+					},
+					{
+						"value":"Ingress",
+						"text":"Ingress"
+					}
+				],
+				"value":"NodePort",
+				"uitype":"code"
+			},
+			{
+				"name":"source_restartpolicy",
+				"label":"重启策略",
+				"data":[
+					{
+						"value":"Always",
+						"text":"Always"
+					},
+					{
+						"value":"OnFailure",
+						"text":"OnFailure"
+					},
+					{
+						"value":"Never",
+						"text":"Never"
+					}
+				],
+				"value":"Always",
+				"uitype":"code"
+			},
+			{
+				"name": "source_apiport",
+				"title": "集群内部映射端口",
+				"type": "short",
+				"length": 0,
+				"uitype": "int",
+				"cwidth": 18,
+				"datatype": "str",
+				"label": "集群内部映射端口"
+			},
+			{
+				"name": "source_insideport",
+				"title": "容器默认监听端口",
+				"type": "short",
+				"length": 0,
+				"uitype": "int",
+				"cwidth": 18,
+				"datatype": "str",
+				"label": "容器默认监听端口"
+			},
+			{
+				"name": "source_outsideport",
+				"title": "集群外部映射端口",
+				"type": "short",
+				"length": 0,
+				"uitype": "int",
+				"cwidth": 18,
+				"datatype": "str",
+				"label": "集群外部映射端口(必须是30000-32767之间的整数)"
+			},
+			{
+				"name":"source_nodeSelector",
+				"label":"节点标签(指定节点运行)",
+				"uitype":"code",
+				"textField":"ip",
+				"valueField":"id",
+				"dataurl":"{{entire_url('get_node_labels.dspy')}}?clusterid={{params_kw.id}}"
+			},
+			{
+				"name":"source_mountpath",
+				"title":"容器内挂载点",
+				"type": "str",
+				"length": 90,
+				"cwidth": 18,
+				"uitype": "str",
+				"datatype": "str",
+				"label":"容器内挂载点"
+			},
+			{
+				"name": "source_storagelimits",
+				"title": "定义存储盘容量(单位:Gi)",
+				"type": "str",
+				"length": 90,
+				"cwidth": 18,
+				"uitype": "str",
+				"datatype": "str",
+				"label": "定义存储盘容量(单位:Gi)"
+			}
+		]
+	},
+	"binds":[
+		{
+			"wid":"self",
+			"event":"submit",
+			"actiontype":"urlwidget",
+			"target":"PopupWindow",
+			"options":{
+				"url":"{{entire_url('new_cpcpodyaml.dspy')}}"
+			}
+		}
+	]
+}

@@ -1,0 +1,278 @@
+{
+    "id": "cpcnode_tbl",
+    "widgettype": "Tabular",
+    "options": {
+        "title": "集群资源实例YAML配置",
+        "description":"显示非系统命名空间下所有资源实例对应的静态YAML参数，更新资源YAML后，kubernetes集群会根据整体资源情况，自动调整资源实例",
+        "css": "card",
+        "editable": {
+            "new_data_url": "{{entire_url('add_cpcpodyaml.dspy')}}",
+            "delete_data_url": "{{entire_url('delete_cpcpodyaml.dspy')}}",
+            "update_data_url": "{{entire_url('update_cpcpodyaml.dspy')}}"
+        },
+        "data_url": "{{entire_url('./get_cpcpodyaml.dspy')}}",
+        "data_method": "GET",
+        "data_params": {{json.dumps(params_kw, indent=4, ensure_ascii=False)}},
+        "row_options": {
+            "browserfields": {
+                "exclouded": [
+                    "cpcid",
+                    "clusterid"
+                ],
+                "alters": {}
+            },
+            "editexclouded": [
+                "id",
+                "cpcid",
+                "clusterid"
+            ],
+            "fields": [
+                {
+                    "name": "id",
+                    "title": "资源级联标识",
+                    "type": "str",
+                    "length": 32,
+                    "cwidth": 12,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "资源级联标识"
+                },
+                {
+                    "name": "cpcid",
+                    "title": "算力中心id",
+                    "type": "str",
+                    "length": 32,
+                    "nullable": "no",
+                    "cwidth": 18,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "算力中心id"
+                },
+                {
+                    "name": "clusterid",
+                    "title": "所属集群",
+                    "type": "long",
+                    "length": 0,
+                    "nullable": "yes",
+                    "cwidth": 18,
+                    "uitype": "int",
+                    "datatype": "long",
+                    "label": "所属集群"
+                },
+                {
+                    "name": "source_name",
+                    "title": "资源名称",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 8,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "资源名称"
+                },
+                {
+                    "name": "namespace_name",
+                    "title": "命名空间",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 14,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "命名空间"
+                },
+                {
+                    "name": "serviceaccount_name",
+                    "title": "服务认证",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 16,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "服务认证"
+                },
+                {
+                    "name": "podcd_name",
+                    "title": "资源控制器名称",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 16,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "资源控制器名称"
+                },
+                {
+                    "name": "instance_type",
+                    "title": "资源实例类型",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 8,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "资源实例类型"
+                },
+                {
+                    "name": "service_name",
+                    "title": "服务名称",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 16,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "服务名称"
+                },
+                {
+                    "name": "source_replicasetnum",
+                    "title": "副本数量",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 5,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "副本数量"
+                },
+                {
+                    "name": "source_authuser",
+                    "title": "默认账号",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 5,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "默认账号"
+                },
+                {
+                    "name": "source_authpasswd",
+                    "title": "默认密码",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 8,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "默认密码"
+                },
+                {
+                    "name": "source_podengine",
+                    "title": "资源控制器",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 7,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "资源控制器"
+                },
+                {
+                    "name": "pod_imagepath",
+                    "title": "基础镜像",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 16,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "基础镜像"
+                },
+                {
+                    "name": "source_memrate",
+                    "title": "内存限制",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 5,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "内存限制"
+                },
+                {
+                    "name": "source_cpurate",
+                    "title": "CPU限制",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 5,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "CPU限制"
+                },
+                {
+                    "name": "source_selflabel",
+                    "title": "资源标签",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 8,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "资源标签"
+                },
+                {
+                    "name": "source_portmode",
+                    "title": "端口映射模式",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 7,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "端口映射模式"
+                },
+                {
+                    "name": "source_restartpolicy",
+                    "title": "重启策略",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 5,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "重启策略"
+                },
+                {
+                    "name": "source_apiport",
+                    "title": "集群内部映射端口",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 9,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "集群内部映射端口"
+                },
+                {
+                    "name": "source_insideport",
+                    "title": "容器默认监听端口",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 9,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "容器默认监听端口"
+                },
+                {
+                    "name": "source_outsideport",
+                    "title": "集群外部映射端口",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 9,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "集群外部映射端口"
+                },
+                {
+                    "name": "source_mountpath",
+                    "title": "容器内部挂载点",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 10,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "容器内部挂载点"
+                },
+                {
+                    "name": "source_storagelimits",
+                    "title": "容器存储盘限制",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 8,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "容器存储盘限制"
+                }
+            ]
+        },
+        "page_rows": 160,
+        "cache_limit": 5
+    },
+    "binds": []
+}

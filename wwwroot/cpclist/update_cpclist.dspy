@@ -1,0 +1,49 @@
+
+ns = params_kw.copy()
+
+
+userorgid = await get_userorgid()
+if not userorgid:
+	return {
+		"widgettype":"Error",
+		"options":{
+			"title":"Authorization Error",
+			"timeout":3,
+			"cwidth":16,
+			"cheight":9,
+			"message":"Please login"
+		}
+	}
+ns['orgid'] = userorgid
+
+
+if params_kw.get('api_pwd'):
+    ns['api_pwd'] = password_encode(params_kw.get('api_pwd'))
+
+
+db = DBPools()
+dbname = await rfexe('get_module_dbname', 'cpcc')
+async with db.sqlorContext(dbname) as sor:
+    r = await sor.U('cpclist', ns)
+    debug('update success');
+    return {
+        "widgettype":"Message",
+        "options":{
+            "title":"Update Success",
+			"cwidth":16,
+			"cheight":9,
+			"timeout":3,
+            "message":"ok"
+        } 
+    }
+        
+return {
+    "widgettype":"Error",
+    "options":{
+        "title":"Update Error",
+		"cwidth":16,
+		"cheight":9,
+		"timeout":3,
+        "message":"failed"
+    }
+}

@@ -1,0 +1,138 @@
+
+ns = {
+    'id':params_kw['id'],
+}
+
+yamlconfig_id = params_kw.get("id")
+
+db = DBPools()
+dbname = await rfexe('get_module_dbname', 'cpcc')
+async with db.sqlorContext(dbname) as sor:
+
+    # 成功完成k8s资源级联删除后才可以删除数据库记录
+    yaml_configs = await sor.R('yaml_config', {'id':yamlconfig_id})
+    if len(yaml_configs) < 1:
+        e = Exception(f'yaml_config {yamlconfig_id=} not exists')
+        exception(f'{e}')
+        raise e
+    yaml_config = yaml_configs[0]
+
+    source_podengine = yaml_config.get("source_podengine")
+    clusterid = yaml_config.get("clusterid")
+    cpcid = yaml_config.get("cpcid")
+    debug(f'===== delete yamlconfig_id: {yamlconfig_id}')
+
+    cpclusters = await sor.R('cpccluster', {'id':clusterid})
+    if len(cpclusters) < 1:
+        e = Exception(f'cpclist {clusterid=} not exists')
+        exception(f'{e}')
+        raise e
+    cpcluster = cpclusters[0]
+    # 此处的nodeid即控制节点id
+    kubeconfig = cpcluster.get("kubeconfig")
+    nodeid = cpcluster.get("controllerid")
+
+    cpcs = await sor.R('cpclist', {'id':cpcid})
+    if len(cpcs) < 1:
+        e = Exception(f'cpclist {cpcid=} not exists')
+        exception(f'{e}')
+        raise e
+    cpc = cpcs[0]
+    nodes = await sor.R('cpcnode', {'id':nodeid})
+    # 这里有问题：没有匹配到节点信息！！！
+    if len(nodes) < 1:
+        e = Exception(f'cpcnode {nodeid=} 节点基础信息不匹配')
+        exception(f'{e}')
+        raise e
+    node = nodes[0]
+    url = cpc.pcapi_url + "/pcapi/api/v1/cluster/common/delete_cpcpod"
+    debug(f"请求url: {url=}")
+    debug(f"目标IP认证信息: {node.ip=} {node.sshport=} {node.adminuser=} {password_decode(node.adminpwd)=}")
+    # 请求方式待定,取决于获取参数值方式
+
+    userorgid = await get_userorgid()
+    debug(f'当前组织ID:{userorgid}')
+    if not userorgid:
+        return {
+            "widgettype":"Error",
+            "options":{
+                "title":"Authorization Error",
+                "timeout":3,
+                "cwidth":16,
+                "cheight":9,
+                "message":"Please login"
+            }
+        }
+            
+    headers = basic_auth_headers(cpc.api_user, password_decode(cpc.api_pwd))
+    ns_name = clusterid.replace("_","-") + "-" + userorgid # 集群信息+组织信息合成命名空间
+    ns_name = ns_name.lower()
+    hc = HttpClient()
+    
+    # type参数：更新和新增都是为apply，删除为delete
+    yamlconfig_id = params_kw.get('id')
+
+    import requests
+    params = {
+        'host':node.ip,
+        'port':node.sshport,
+        'user':node.adminuser,
+        'psssword':password_decode(node.adminpwd),
+        'kubeconfig':kubeconfig,
+        'action':'delete',
+        'namespace_name': ns_name,
+        'serviceaccount_name': ns_name + "-serviceaccount",
+        'podcd_name': yamlconfig_id + "-" + source_podengine.lower(),
+        'service_name': yamlconfig_id + "-service",	#取代+ "-" + source_name 
+    }
+    params.update(yaml_config)
+
+    keys_to_remove = ['_webbricks_', 'width', 'height', '_is_mobile']
+    for key in keys_to_remove:
+        if key in params:
+            del params[key]
+
+    debug(f'请求pcapi参数: {params}')
+
+    # 框架不支持超时时间
+    resp = requests.post(url,
+        headers = headers,
+        data = params,
+        timeout = 500
+    )
+
+    debug(f'{type(resp)}->{resp}')
+    resp = json.dumps(resp.json())	#这里模拟hc.request返回的结果写后续逻辑
+    data = json.loads(resp).get('data')
+    keys_to_remove = ['host', 'port', 'user', 'psssword', 'kubeconfig']
+    for key in keys_to_remove:
+        if key in params:
+            del params[key]
+    params['id'] = yamlconfig_id
+
+    if json.loads(resp).get("status") == True:
+
+        r = await sor.D('yaml_config', ns)
+        debug('级联删除集群资源成功');
+        return {
+            "widgettype":"Message",
+            "options":{
+                "title":"级联删除集群资源成功",
+                "timeout":3,
+                "cwidth":16,
+                "cheight":9,
+                "message":"ok"
+            }
+        }
+
+debug('级联删除集群资源失败');
+return {
+    "widgettype":"Error",
+    "options":{
+        "title":"级联删除集群资源失败",
+		"timeout":3,
+		"cwidth":16,
+		"cheight":9,
+        "message":"failed"
+    }
+}

@@ -1,0 +1,15 @@
+{
+	"widgettype":"VBox",
+	"id":"page_center",
+	"options":{
+		"css":"filler"
+	},
+	"subwidgets":[
+		{
+			"widgettype":"urlwidget",
+			"options":{
+				"url":"{{entire_url('/appbase/appcodes')}}"
+			}
+		}
+	]
+}

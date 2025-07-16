@@ -1,0 +1,101 @@
+# params_kw:
+#   clusterid
+debug(f'Web参数：{params_kw=}')
+dbname = get_module_dbname('cpcc')
+db = DBPools()
+clusterid = params_kw.clusterid
+
+async with db.sqlorContext(dbname) as sor:
+	# clusterid -> nodeid
+	cpclusters = await sor.R('cpccluster', {'id':clusterid})
+	if len(cpclusters) < 1:
+		e = Exception(f'cpclist {clusterid=} not exists')
+		exception(f'{e}')
+		raise e
+	cpcluster = cpclusters[0]
+	# 此处的nodeid即控制节点id
+	kubeconfig = cpcluster.get("kubeconfig")
+	nodeid = cpcluster.get("controllerid")
+	cpcid = cpcluster.get("cpcid")
+	cpcs = await sor.R('cpclist', {'id':cpcid})
+	if len(cpcs) < 1:
+		e = Exception(f'cpclist {cpcid=} not exists')
+		exception(f'{e}')
+		raise e
+	cpc = cpcs[0]
+	nodes = await sor.R('cpcnode', {'id':nodeid})
+	# 这里有问题：没有匹配到节点信息！！！
+	if len(nodes) < 1:
+		e = Exception(f'cpcnode {nodeid=} 节点基础信息不匹配')
+		exception(f'{e}')
+		raise e
+	node = nodes[0]
+	url = cpc.pcapi_url + "/pcapi/api/v1/cluster/common/yaml_apply"
+	debug(f"请求url: {url=}")
+	debug(f"目标IP认证信息: {node.ip=} {node.sshport=} {node.adminuser=} {password_decode(node.adminpwd)=}")
+	# 请求方式待定,取决于获取参数值方式
+
+	userorgid = await get_userorgid()
+	debug(f'当前组织ID:{userorgid}')
+	if not userorgid:
+		return {
+			"widgettype":"Error",
+			"options":{
+				"title":"Authorization Error",
+				"timeout":3,
+				"cwidth":16,
+				"cheight":9,
+				"message":"Please login"
+			}
+		}
+	headers = basic_auth_headers(cpc.api_user, password_decode(cpc.api_pwd))
+	ns_name = clusterid.replace("_","-") + "-" + userorgid # 集群信息+组织信息合成命名空间
+	ns_name = ns_name.lower()
+	hc = HttpClient()
+	# type参数：更新和新增都是为apply，删除为delete
+	yamlconfig_id = uuid().replace("_","-").lower()
+	import requests
+	params = {
+		'cluster_type': "k8s",
+		'host':node.ip,
+		'port':node.sshport,
+		'user':node.adminuser,
+		'psssword':password_decode(node.adminpwd),
+		'kubeconfig':kubeconfig,
+		'action':'apply',
+		'namespace_name': ns_name,
+		'serviceaccount_name': ns_name + "-serviceaccount",
+		'podcd_name': yamlconfig_id + "-" + params_kw.get("source_podengine").lower(),
+		'service_name': yamlconfig_id + "-service",
+		'instance_type': params_kw.get("instance_type")	#目前仅支持RelationalDB和LinuxOS
+	}
+	params.update(params_kw)
+
+	keys_to_remove = ['_webbricks_', 'width', 'height', '_is_mobile']
+	for key in keys_to_remove:
+		if key in params:
+			del params[key]
+
+	resp = requests.post(url,
+		headers = headers,
+		data=params,
+		timeout=500
+	)
+	if resp.status_code != 200:
+		return UiError(title='新增YAML参数', message=f'算力中心服务异常 {resp.status_code}')
+	debug(f'{type(resp)=}->{resp=}')
+	resp = json.dumps(resp.json())	#这里模拟hc.request返回的结果写后续逻辑
+	keys_to_remove = ['cluster_type', 'host', 'port', 'user', 'psssword', 'kubeconfig']
+	for key in keys_to_remove:
+		if key in params:
+			del params[key]
+	params['id'] = yamlconfig_id
+	params['cpcid'] = cpcid
+	if json.loads(resp).get("status") == True:
+		debug(f"更新资源yaml配置元数据: {params=}")
+		await sor.C('yaml_config', params)
+		return UiMessage(title='新增YAML参数', message='资源实例参数更新成功,请10秒后查看实时资源实例面板')
+	else:
+		return UiError(title='新增YAML参数', message='资源实例数据写入数据库失败')
+
+return UiError(title='新增YAML参数', message='全局未知异常')

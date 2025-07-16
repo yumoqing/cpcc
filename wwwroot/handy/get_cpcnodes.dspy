@@ -1,0 +1,12 @@
+debug(f'{params_kw=}')
+db = DBPools()
+dbname = get_module_dbname('cpcc')
+ns = {
+	"cpcid":params_kw.cpcid
+}
+async with db.sqlorContext(dbname) as sor:
+	sql = "select * from cpcnode where cpcid=${cpcid}$ and node_status = '0'"
+	recs = await sor.sqlExe(sql, ns.copy())
+	return recs
+exception(f'{sql=},{ns=}')
+return []

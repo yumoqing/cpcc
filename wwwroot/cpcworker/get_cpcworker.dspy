@@ -1,0 +1,84 @@
+ns = params_kw.copy()
+
+debug(f'get_cpcworker.dspy:{ns=}')
+#{'_webbricks_': '1', 'width': '1139', 'height': '940', '_is_mobile': '0', 
+#'clusterid': '4hBm8atruISOU2bs24t_N', 'cpcid': 'AROU9udKtPNyh0AZtO_WY', 'page': '1', 'rows': '160'}
+
+cpcid = params_kw.cpcid
+clusterid = params_kw.clusterid
+
+# 写数据库的步骤先pass
+dbname = get_module_dbname('cpcc')
+db = DBPools()
+
+async with db.sqlorContext(dbname) as sor:
+    # 通过算力中心ID,获取算力中心部署所在设备的http(s)协议信息
+    cpcs = await sor.R('cpclist', {'id':cpcid})
+    if len(cpcs) < 1:
+        e = Exception(f'cpclist {cpcid=} not exists')
+        exception(f'{e}')
+        raise e
+    cpc = cpcs[0]
+    # 通过集群ID,获取算力集群控制节点所在设备的ssh协议参数
+    cpclusters = await sor.R('cpccluster', {'id':clusterid})
+    if len(cpclusters) < 1:
+	    e = Exception(f'cpclist {clusterid=} not exists')
+	    exception(f'{e}')
+	    raise e
+    cpcluster = cpclusters[0]
+    nodeid = cpcluster.get("controllerid")
+    kubeconfig = cpcluster.get("kubeconfig")
+    nodes = await sor.R('cpcnode', {'id':nodeid})
+    # 这里有问题：没有匹配到节点信息！！！
+    if len(nodes) < 1:
+        e = Exception(f'cpcnode {nodeid=} 节点基础信息不匹配')
+        exception(f'{e}')
+        raise e
+    node = nodes[0]
+    url = cpc.pcapi_url + "/pcapi/api/v1/cluster/common/get_cluster_nodes"
+    debug(f"请求url: {url=}")
+    debug(f"目标IP认证信息: {node.ip=} {node.sshport=} {node.adminuser=} {password_decode(node.adminpwd)=}")
+    # 请求方式待定,取决于获取参数值方式
+            
+    headers = basic_auth_headers(cpc.api_user, password_decode(cpc.api_pwd))
+
+    hc = HttpClient()
+
+    import requests
+    params = {
+        'host':node.ip,
+        'port':node.sshport,
+        'user':node.adminuser,
+        'psssword':password_decode(node.adminpwd),
+        'kubeconfig':kubeconfig
+    }
+    debug(f'请求参数{params=}')
+
+    #resp = await hc.request(url, method='GET',
+    #	headers = headers,
+    #	data=params
+    #)
+    # 框架不支持超时时间
+    resp = requests.post(url,
+        headers = headers,
+        data=params,
+        timeout=500
+    )
+    resp = json.dumps(resp.json())	#这里模拟hc.request返回的结果写后续逻辑
+    #debug(f'{type(resp)=}->{resp=}')
+    debug(f"pcapi返回值: {json.loads(resp)=}")
+    data = json.loads(resp).get('data')
+    if json.loads(resp).get("status") == True:
+        #node_ns = {
+        #	'id':nodeid,
+        #	'node_status':'1',
+        #	'clusterid':clusterid,
+        #	'cpcid':cpcid
+        #}
+        #debug(f"更新新增工作节点元数据 {node_ns=}")
+        #await sor.U('cpcnode', node_ns)
+        return data
+    else:
+        return UiError(title='get cluster nodes', message='failed')
+
+return UiError(title='get cluster nodes', message='uncatched error')

@@ -1,0 +1,33 @@
+{
+	"widgettype":"Form",
+	"options":{
+		"title":"新增工作节点",
+		"description":"为算力中心的kubernetes集群新增工作节点，目前支持kubernetes工作模式",
+		"fields":[
+			{
+				"name":"clusterid",
+				"value":"{{params_kw.id}}",
+				"uitype":"hide"
+			},
+			{
+				"name":"worker_nodeid",
+				"label":"请选择安装工作模式的节点",
+				"uitype":"code",
+				"textField":"ip",
+				"valueField":"id",
+				"dataurl":"{{entire_url('get_availableworker.dspy')}}?clusterid={{params_kw.id}}"
+			}	
+		]
+	},
+	"binds":[
+		{
+			"wid":"self",
+			"event":"submit",
+			"actiontype":"urlwidget",
+			"target":"PopupWindow",
+			"options":{
+				"url":"{{entire_url('new_cpcworker.dspy')}}"
+			}
+		}
+	]
+}

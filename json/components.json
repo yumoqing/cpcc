@@ -1,0 +1,13 @@
+{
+    "tblname":"components",
+    "params":{
+        "browserfields": {
+            "exclouded": ["id"],
+            "alters": {}
+        },
+        "editexclouded": [
+            "id"
+        ]
+    }
+}
+

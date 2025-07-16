@@ -1,0 +1,32 @@
+
+ns = params_kw.copy()
+
+
+
+
+db = DBPools()
+dbname = await rfexe('get_module_dbname', 'cpcc')
+async with db.sqlorContext(dbname) as sor:
+    r = await sor.U('cpccluster', ns)
+    debug('update success');
+    return {
+        "widgettype":"Message",
+        "options":{
+            "title":"Update Success",
+			"cwidth":16,
+			"cheight":9,
+			"timeout":3,
+            "message":"ok"
+        } 
+    }
+        
+return {
+    "widgettype":"Error",
+    "options":{
+        "title":"Update Error",
+		"cwidth":16,
+		"cheight":9,
+		"timeout":3,
+        "message":"failed"
+    }
+}

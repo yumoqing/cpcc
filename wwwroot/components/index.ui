@@ -1,0 +1,122 @@
+
+{
+	"id":"components_tbl",
+    "widgettype":"Tabular",
+    "options":{
+
+
+		"title":"部件表",
+
+
+
+
+		"css":"card",
+
+		"editable":{
+			"new_data_url":"{{entire_url('add_components.dspy')}}",
+			"delete_data_url":"{{entire_url('delete_components.dspy')}}",
+			"update_data_url":"{{entire_url('update_components.dspy')}}"
+		},
+
+
+        "data_url":"{{entire_url('./get_components.dspy')}}",
+		"data_method":"GET",
+		"data_params":{{json.dumps(params_kw, indent=4, ensure_ascii=False)}},
+		"row_options":{
+
+
+
+			"browserfields": {
+    "exclouded": [
+        "id"
+    ],
+    "alters": {}
+},
+
+
+			"editexclouded":[
+    "id"
+],
+
+			"fields":[
+    {
+        "name": "id",
+        "title": "id",
+        "type": "str",
+        "length": 32,
+        "cwidth": 18,
+        "uitype": "str",
+        "datatype": "str",
+        "label": "id"
+    },
+    {
+        "name": "name",
+        "title": "名称",
+        "type": "str",
+        "length": 255,
+        "cwidth": 18,
+        "uitype": "str",
+        "datatype": "str",
+        "label": "名称"
+    },
+    {
+        "name": "ccatelogid",
+        "title": "部件分类",
+        "type": "str",
+        "length": 255,
+        "label": "部件分类",
+        "uitype": "code",
+        "valueField": "ccatelogid",
+        "textField": "ccatelogid_text",
+        "params": {
+            "dbname": "{{rfexe('get_module_dbname', 'cpcc')}}",
+            "table": "appcodes_kv",
+            "tblvalue": "k",
+            "tbltext": "v",
+            "valueField": "ccatelogid",
+            "textField": "ccatelogid_text",
+            "cond": "parentid='ccatelog'"
+        },
+        "dataurl": "{{entire_url('/appbase/get_code.dspy')}}"
+    },
+    {
+        "name": "cmodel",
+        "title": "型号",
+        "type": "str",
+        "length": 255,
+        "cwidth": 18,
+        "uitype": "str",
+        "datatype": "str",
+        "label": "型号"
+    },
+    {
+        "name": "unitname",
+        "title": "计量名",
+        "type": "str",
+        "length": 32,
+        "cwidth": 18,
+        "uitype": "str",
+        "datatype": "str",
+        "label": "计量名"
+    },
+    {
+        "name": "unitvalue",
+        "title": "计量值",
+        "type": "short",
+        "length": 0,
+        "uitype": "int",
+        "datatype": "short",
+        "label": "计量值"
+    }
+]
+        },  
+
+
+
+        "page_rows":160,
+        "cache_limit":5
+    }
+
+	,"binds":[]
+
+}

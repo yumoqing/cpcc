@@ -1,0 +1,79 @@
+{
+	"widgettype":"Form",
+	"options":{
+		"title":"创建集群",
+		"description":"为算力中心创建集群，目前支持kubernetes集群",
+		"fields":[
+			{
+				"name":"cpcid",
+				"value":"{{params_kw.id}}",
+				"uitype":"hide"
+			},
+			{
+				"name":"cluster_type",
+				"label":"集群类型",
+				"data":[
+					{
+						"value":"0",
+						"text":"kubernetes"
+					},
+					{
+						"value":"1",
+						"text":"slurm"
+					}
+				],
+				"value":"0",
+				"uitype":"code"
+			},
+			{
+				"name": "cluster_name",
+				"title": "集群名称",
+				"type": "str",
+				"length": 90,
+				"cwidth": 18,
+				"uitype": "str",
+				"datatype": "str",
+				"label": "集群名称"
+			},
+			{
+				"name":"ctl_nodeid",
+				"label":"控制节点IP",
+				"uitype":"code",
+				"textField":"ip",
+				"valueField":"id",
+				"dataurl":"{{entire_url('get_cpcnodes.dspy')}}?cpcid={{params_kw.id}}"
+			},
+			{
+				"name": "enable_date",
+				"title": "启用日期",
+				"type": "date",
+				"length": 0,
+				"cwidth": 18,
+				"uitype": "date",
+				"datatype": "date",
+				"label": "启用日期"
+			},
+			{
+				"name": "export_date",
+				"title": "停用日期",
+				"type": "date",
+				"length": 0,
+				"cwidth": 18,
+				"uitype": "date",
+				"datatype": "date",
+				"label": "停用日期"
+			}
+		]
+	},
+	"binds":[
+		{
+			"wid":"self",
+			"event":"submit",
+			"actiontype":"urlwidget",
+			"target":"PopupWindow",
+			"options":{
+				"url":"{{entire_url('new_cluster.dspy')}}"
+			}
+		}
+	]
+}

@@ -1,0 +1,16 @@
+{
+    "tblname":"cpcnode",
+    "params":{
+		"confidential_fields":["adminpwd"],
+        "browserfields": {
+            "exclouded": [
+				"id", "cpcid"
+			],
+            "alters": {}
+        },
+        "editexclouded": [
+            "id", "cpcid", "clusterid"
+        ]
+    }
+}
+

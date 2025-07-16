@@ -1,0 +1,179 @@
+{
+    "id": "cpcnode_tbl",
+    "widgettype": "Tabular",
+    "options": {
+        "title": "入网算力节点",
+        "css": "card",
+        "editable": {
+            "new_data_url": "{{entire_url('add_cpcnode.dspy')}}",
+            "delete_data_url": "{{entire_url('delete_cpcnode.dspy')}}",
+            "update_data_url": "{{entire_url('update_cpcnode.dspy')}}"
+        },
+        "data_url": "{{entire_url('./get_cpcnode.dspy')}}",
+        "data_method": "GET",
+        "data_params": {{json.dumps(params_kw, indent=4, ensure_ascii=False)}},
+        "row_options": {
+            "browserfields": {
+                "exclouded": [
+                    "id",
+                    "cpcid",
+                    "clusterid"
+                ],
+                "alters": {}
+            },
+            "editexclouded": [
+                "id",
+                "cpcid",
+                "clusterid"
+            ],
+            "fields": [
+                {
+                    "name": "id",
+                    "title": "id",
+                    "type": "str",
+                    "length": 32,
+                    "cwidth": 18,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "id"
+                },
+                {
+                    "name": "ip",
+                    "title": "内网ip",
+                    "type": "str",
+                    "length": 90,
+                    "cwidth": 10,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "内网ip"
+                },
+                {
+                    "name": "name",
+                    "title": "名称",
+                    "type": "str",
+                    "length": 255,
+                    "cwidth": 16,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "名称"
+                },
+                {
+                    "name": "devicetype",
+                    "title": "设备类型",
+                    "type": "str",
+                    "length": 1,
+                    "cwidth": 8,
+                    "label": "设备类型",
+                    "uitype": "code",
+                    "valueField": "devicetype",
+                    "textField": "devicetype_text",
+                    "params": {
+                        "dbname": "{{rfexe('get_module_dbname', 'cpcc')}}",
+                        "table": "appcodes_kv",
+                        "tblvalue": "k",
+                        "tbltext": "v",
+                        "valueField": "devicetype",
+                        "textField": "devicetype_text",
+                        "cond": "parentid='devicetype'"
+                    },
+                    "dataurl": "{{entire_url('/appbase/get_code.dspy')}}"
+                },
+                {
+                    "name": "sshport",
+                    "title": "ssh端口号",
+                    "type": "short",
+                    "length": 0,
+                    "uitype": "int",
+                    "datatype": "short",
+                    "label": "ssh端口号"
+                },
+                {
+                    "name": "adminuser",
+                    "title": "管理账号",
+                    "type": "str",
+                    "length": 99,
+                    "cwidth": 8,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "管理账号"
+                },
+                {
+                    "name": "adminpwd",
+                    "title": "管理密码",
+                    "type": "str",
+                    "length": 99,
+                    "cwidth": 18,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "管理密码"
+                },
+                {
+                    "name": "cpcid",
+                    "title": "算力中心id",
+                    "type": "str",
+                    "length": 32,
+                    "nullable": "no",
+                    "cwidth": 18,
+                    "uitype": "str",
+                    "datatype": "str",
+                    "label": "算力中心id"
+                },
+                {
+                    "name": "node_status",
+                    "title": "节点状态",
+                    "type": "str",
+                    "length": 1,
+                    "nullable": "yes",
+                    "label": "节点状态",
+                    "uitype": "code",
+                    "valueField": "node_status",
+                    "textField": "node_status_text",
+                    "params": {
+                        "dbname": "{{rfexe('get_module_dbname', 'cpcc')}}",
+                        "table": "appcodes_kv",
+                        "tblvalue": "k",
+                        "tbltext": "v",
+                        "valueField": "node_status",
+                        "textField": "node_status_text",
+                        "cond": "parentid='node_status'"
+                    },
+                    "dataurl": "{{entire_url('/appbase/get_code.dspy')}}"
+                },
+                {
+                    "name": "clusterid",
+                    "title": "所属集群",
+                    "type": "long",
+                    "length": 0,
+                    "nullable": "yes",
+                    "cwidth": 18,
+                    "uitype": "int",
+                    "datatype": "long",
+                    "label": "所属集群"
+                },
+                {
+                    "name": "enable_date",
+                    "title": "启用日期",
+                    "type": "date",
+                    "length": 0,
+                    "cwidth": 18,
+                    "uitype": "date",
+                    "datatype": "date",
+                    "label": "启用日期"
+                },
+                {
+                    "name": "export_date",
+                    "title": "停用日期",
+                    "type": "date",
+                    "length": 0,
+                    "cwidth": 18,
+                    "uitype": "date",
+                    "datatype": "date",
+                    "label": "停用日期"
+                }
+            ]
+        },
+        "page_rows": 160,
+        "cache_limit": 5
+    },
+    "binds": []
+}

@@ -1,0 +1,97 @@
+# params_kw:
+# 	cpcid
+#	cluster_type
+#	ctl_nodeid
+#	cluster_name
+debug(f'{params_kw=}')
+dbname = get_module_dbname('cpcc')
+db = DBPools()
+cpcid = params_kw.cpcid
+nodeid = params_kw.ctl_nodeid
+cluster_type = params_kw.cluster_type
+cluster_name = params_kw.cluster_name
+enable_date = params_kw.enable_date
+export_date = params_kw.export_date
+# debug(f"=====> {cluster_type=} {cluster_name=} {nodeid=} {cpcid=}")
+
+async with db.sqlorContext(dbname) as sor:
+	cpcs = await sor.R('cpclist', {'id':cpcid})
+	if len(cpcs) < 1:
+		e = Exception(f'cpclist {cpcid=} not exists')
+		exception(f'{e}')
+		raise e
+	cpc = cpcs[0]
+	nodes = await sor.R('cpcnode', {'id':nodeid})
+	# 这里有问题：没有匹配到节点信息！！！
+	if len(nodes) < 1:
+		e = Exception(f'cpcnode {nodeid=} 节点基础信息不匹配')
+		exception(f'{e}')
+		raise e
+	node = nodes[0]
+	url = cpc.pcapi_url + "/pcapi/api/v1/cluster/common/new_cluster"
+	debug(f"请求url: {url=}")
+	debug(f"目标IP认证信息: {node.ip=} {node.sshport=} {node.adminuser=} {password_decode(node.adminpwd)=}")
+	# 请求方式待定,取决于获取参数值方式
+	debug(333)		
+	headers = basic_auth_headers('ysh', 'Kyy@123456')
+	debug(22)
+	hc = HttpClient()
+	print(444)
+	import requests
+	params = {
+		'cluster_type': cluster_type,
+		'host':node.ip,
+		'port':node.sshport,
+		'user':node.adminuser,
+		'psssword':password_decode(node.adminpwd),
+		'role':"master"
+	}
+	debug(f'{params=}')
+	debug(1111111)
+	#resp = await hc.request(url, method='POST',
+	#	headers = headers,
+	#	data=params
+	#)
+	# 框架不支持超时时间
+	resp = requests.post(url,
+		headers = headers,
+		data=params,
+		timeout=500
+	)
+	resp = json.dumps(resp.json())	#这里模拟hc.request返回的结果写后续逻辑
+	debug(f'{type(resp)=}->{resp=}')
+	debug(f"pcapi返回值: {json.loads(resp)=}")
+	2datas = json.loads(resp).get('data')
+	2datas = 2datas.split("\n")
+	clusterjoin = 2datas[0]
+	kubeconfig_context = 2datas[1]
+	if json.loads(resp).get("status") == True:
+		# new cluster info write to database
+		# update node_status to '1'  cpcnode record identify by ctl_nodeid ctl_node
+		clusterid = uuid()
+		ns = {
+			'id':clusterid,
+			'clustertype':cluster_type,
+			'cpcid':cpcid,
+			'controllerid':nodeid,
+			'name':cluster_name,
+			'enable_date':enable_date,
+			'export_date':export_date,
+			'clusterjoin':clusterjoin,
+			'kubeconfig':kubeconfig_context
+		}
+		debug(f"新集群元数据: {ns=}")
+		await sor.C('cpccluster', ns)
+		node_ns = {
+			'id':nodeid,
+			'node_status':'1',
+			'clusterid':clusterid,
+			'cpcid':cpcid
+		}
+		debug(f"更新控制节点元数据 {node_ns=}")
+		await sor.U('cpcnode', node_ns)
+		return UiMessage(title='new cluster', message='操作成功!\n加入集群凭证: %s' % clusterjoin)
+	else:
+		return UiError(title='new cluster', message='failed')
+
+return UiError(title='new cluster', message='uncatched error')

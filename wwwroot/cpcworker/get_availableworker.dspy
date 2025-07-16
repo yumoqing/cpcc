@@ -1,0 +1,11 @@
+db = DBPools()
+dbname = get_module_dbname('cpcc')
+ns = {
+	"clusterid":params_kw.clusterid
+}
+async with db.sqlorContext(dbname) as sor:
+	sql = "select cpcid,id,ip,node_status from cpcnode where cpcid = (select cpcid from cpccluster where id = ${clusterid}$) and node_status = '0';"
+	recs = await sor.sqlExe(sql, ns.copy())
+	return recs
+exception(f'{sql=},{ns=}')
+return []

@@ -1,0 +1,58 @@
+{
+    "tblname":"cpclist",
+    "params":{
+        "toolbar":{
+            "tools":[
+                {
+                    "name":"newcluster",
+                    "selected_row":true,
+                    "label":"新建集群"
+                }
+            ]
+        },
+        "binds":[
+            {
+                "wid":"self",
+                "event":"newcluster",
+                "actiontype":"urlwidget",
+                "target":"PopupWindow",
+				"popup_options":{
+					"width":"80%",
+					"height":"80%"
+				},
+                "options":{
+                    "url":"{{entire_url('../handy/new_cluster.ui')}}",
+					"params":{
+                        "id":"{{params_kw.id}}"
+                    }
+                }
+            }
+        ],
+		"logined_userorgid":"orgid",
+		"confidential_fields":[
+			"api_pwd"
+		],
+        "browserfields": {
+            "exclouded": [
+				"id","orgid", "pcapi_url","pcapi_user", "pcapi_pwd"
+			],
+            "alters": {}
+        },
+        "editexclouded": [
+            "id", "orgid"
+        ],
+		"subtables":[
+			{
+				"subtable":"cpccluster",
+				"field":"cpcid",
+				"title":"集群"
+			},
+			{
+				"subtable":"cpcnode",
+				"field":"cpcid",
+				"title":"节点"
+			}
+		]
+    }
+}
+

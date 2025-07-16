@@ -1,0 +1,123 @@
+
+ns = params_kw.copy()
+
+
+userorgid = await get_userorgid()
+if not userorgid:
+	return {
+		"widgettype":"Error",
+		"options":{
+			"title":"Authorization Error",
+			"timeout":3,
+			"cwidth":16,
+			"cheight":9,
+			"message":"Please login"
+		}
+	}
+ns['orgid'] = userorgid
+ns['userorgid'] = userorgid
+
+debug(f'get_cpclist.dspy:{ns=}')
+if not ns.get('page'):
+    ns['page'] = 1 
+if not ns.get('sort'):
+
+	ns['sort'] = 'id'
+
+
+sql = '''select a.*, b.orgid_text
+from (select * from cpclist where 1=1 [[filterstr]]) a left join (select id as orgid, 
+			orgname as orgid_text from organization where 1 = 1) b on a.orgid = b.orgid'''
+
+filterjson = params_kw.get('data_filter')
+if not filterjson:
+	fields = [ f['name'] for f in [
+    {
+        "name": "id",
+        "title": "id",
+        "type": "str",
+        "length": 32
+    },
+    {
+        "name": "name",
+        "title": "名称",
+        "type": "str",
+        "length": 255
+    },
+    {
+        "name": "orgid",
+        "title": "属主机构id",
+        "type": "str",
+        "length": 32
+    },
+    {
+        "name": "pcapi_url",
+        "title": "pcapi网址",
+        "type": "str",
+        "length": 500
+    },
+    {
+        "name": "api_user",
+        "title": "接口用户",
+        "type": "str",
+        "length": 100
+    },
+    {
+        "name": "api_pwd",
+        "title": "接口密码",
+        "type": "str",
+        "length": 100
+    },
+    {
+        "name": "enable_date",
+        "title": "启用日期",
+        "type": "date",
+        "length": 255
+    },
+    {
+        "name": "expire_date",
+        "title": "停用日期",
+        "type": "date",
+        "length": 255
+    },
+    {
+        "name": "contactname",
+        "title": "联系人",
+        "type": "str",
+        "length": 100
+    },
+    {
+        "name": "contactphone",
+        "title": "联系电话",
+        "type": "str",
+        "length": 100
+    }
+] ]
+	filterjson = default_filterjson(fields, ns)
+filterdic = ns.copy()
+filterdic['filterstr'] = ''
+filterdic['userorgid'] = '${userorgid}$'
+filterdic['userid'] = '${userid}$'
+if filterjson:
+	dbf = DBFilter(filterjson)
+	conds = dbf.gen(ns)
+	if conds:
+		ns.update(dbf.consts)
+		conds = f' and {conds}'
+		filterdic['filterstr'] = conds
+ac = ArgsConvert('[[', ']]')
+vars = ac.findAllVariables(sql)
+NameSpace = {v:'${' + v + '}$' for v in vars if v != 'filterstr' }
+filterdic.update(NameSpace)
+sql = ac.convert(sql, filterdic)
+
+debug(f'{sql=}')
+db = DBPools()
+dbname = await rfexe('get_module_dbname', 'cpcc')
+async with db.sqlorContext(dbname) as sor:
+    r = await sor.sqlPaging(sql, ns) 
+    return r
+return {
+	"total":0,
+	"rows":[]
+}
