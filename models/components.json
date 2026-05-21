@@ -1,0 +1,57 @@
+{
+    "summary": [
+        {
+            "name": "components",
+            "title": "部件表",
+            "primary": [
+                "id"
+            ]
+        }
+    ],
+    "fields": [
+        {
+            "name": "id",
+            "title": "id",
+            "type": "str",
+            "length": 32
+        },
+        {
+            "name": "name",
+            "title": "名称",
+            "type": "str",
+            "length": 255
+        },
+        {
+            "name": "ccatelogid",
+            "title": "部件分类",
+            "type": "str",
+            "length": 255
+        },
+        {
+            "name": "cmodel",
+            "title": "型号",
+            "type": "str",
+            "length": 255
+        },
+        {
+            "name": "unitname",
+            "title": "计量名",
+            "type": "str",
+            "length": 32
+        },
+        {
+            "name": "unitvalue",
+            "title": "计量值",
+            "type": "short"
+        }
+    ],
+    "codes": [
+        {
+            "field": "ccatelogid",
+            "table": "appcodes_kv",
+            "valuefield": "k",
+            "textfield": "v",
+            "cond": "parentid='ccatelog'"
+        }
+    ]
+}

@@ -1,0 +1,81 @@
+{
+    "summary": [
+        {
+            "name": "cpclist",
+            "title": "算力中心列表",
+            "primary": [
+                "id"
+            ]
+        }
+    ],
+    "fields": [
+        {
+            "name": "id",
+            "title": "id",
+            "type": "str",
+            "length": 32
+        },
+        {
+            "name": "name",
+            "title": "名称",
+            "type": "str",
+            "length": 255
+        },
+        {
+            "name": "orgid",
+            "title": "属主机构id",
+            "type": "str",
+            "length": 32
+        },
+        {
+            "name": "pcapi_url",
+            "title": "pcapi网址",
+            "type": "str",
+            "length": 500
+        },
+        {
+            "name": "api_user",
+            "title": "接口用户",
+            "type": "str",
+            "length": 100
+        },
+        {
+            "name": "api_pwd",
+            "title": "接口密码",
+            "type": "str",
+            "length": 100
+        },
+        {
+            "name": "enable_date",
+            "title": "启用日期",
+            "type": "date",
+            "length": 255
+        },
+        {
+            "name": "expire_date",
+            "title": "停用日期",
+            "type": "date",
+            "length": 255
+        },
+        {
+            "name": "contactname",
+            "title": "联系人",
+            "type": "str",
+            "length": 100
+        },
+        {
+            "name": "contactphone",
+            "title": "联系电话",
+            "type": "str",
+            "length": 100
+        }
+    ],
+    "codes": [
+        {
+            "field": "orgid",
+            "table": "organization",
+            "valuefield": "id",
+            "textfield": "orgname"
+        }
+    ]
+}

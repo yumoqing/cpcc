@@ -1,0 +1,52 @@
+{
+    "summary": [
+        {
+            "name": "cpvalue",
+            "title": "算力值",
+            "primary": [
+                "id"
+            ]
+        }
+    ],
+    "fields": [
+        {
+            "name": "id",
+            "title": "id",
+            "type": "str",
+            "length": 32
+        },
+        {
+            "name": "comid",
+            "title": "部件id",
+            "type": "str",
+            "length": 255
+        },
+        {
+            "name": "cpval",
+            "title": "算力值",
+            "type": "float",
+            "length": 18
+        },
+        {
+            "name": "cpunit",
+            "title": "算力单位",
+            "type": "str",
+            "length": 1
+        }
+    ],
+    "codes": [
+        {
+            "field": "comid",
+            "table": "components",
+            "valuefield": "id",
+            "textfield": "name"
+        },
+        {
+            "field": "cpunit",
+            "table": "appcodes_kv",
+            "valuefield": "id",
+            "textfield": "value",
+            "cond": "parentid='cpunit'"
+        }
+    ]
+}

@@ -1,0 +1,45 @@
+{
+    "summary": [
+        {
+            "name": "cpcnode_config",
+            "title": "节点配置表",
+            "primary": [
+                "id"
+            ]
+        }
+    ],
+    "fields": [
+        {
+            "name": "id",
+            "title": "id",
+            "type": "str",
+            "length": 32
+        },
+        {
+            "name": "nodeid",
+            "title": "节点名称",
+            "type": "str",
+            "length": 32
+        },
+        {
+            "name": "name",
+            "title": "名称",
+            "type": "str",
+            "length": 255
+        },
+        {
+            "name": "description",
+            "title": "描述",
+            "type": "str",
+            "length": 3000
+        }
+    ],
+    "codes": [
+        {
+            "field": "nodeid",
+            "table": "cpnode",
+            "valuefield": "id",
+            "textfield": "name"
+        }
+    ]
+}

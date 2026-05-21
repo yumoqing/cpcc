@@ -1,0 +1,49 @@
+{
+    "summary": [
+        {
+            "name": "cpcnode_config_detail",
+            "title": "节点配置明细项",
+            "primary": [
+                "id"
+            ]
+        }
+    ],
+    "fields": [
+        {
+            "name": "id",
+            "title": "id",
+            "type": "str",
+            "length": 32
+        },
+        {
+            "name": "nodeconfigid",
+            "title": "节点配置id",
+            "type": "str",
+            "length": 32
+        },
+        {
+            "name": "comid",
+            "title": "部件id",
+            "type": "str",
+            "length": 32
+        },
+        {
+            "name": "comcnt",
+            "title": "部件数量",
+            "type": "short"
+        }
+    ],
+    "codes": [
+        {
+            "field": "comid",
+            "table": "components",
+            "valuefield": "id",
+            "textfield": "name"
+        },
+        {
+            "field": "nodeconfigid",
+            "table": "cpnode_config",
+            "textfield": "name"
+        }
+    ]
+}
