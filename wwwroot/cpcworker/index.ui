@@ -1,4 +1,11 @@
 {
+    "widgettype": "VBox",
+    "options": {
+        "cheight": 40,
+        "width": "100%"
+    },
+    "subwidgets": [
+{
     "id": "cpcworker_tbl",
     "widgettype": "Tabular",
     "options": {
@@ -176,4 +183,6 @@
         "cache_limit": 5
     },
     "binds": []
+}
+    ]
 }

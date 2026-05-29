@@ -1,4 +1,10 @@
-
+{
+    "widgettype": "VBox",
+    "options": {
+        "cheight": 40,
+        "width": "100%"
+    },
+    "subwidgets": [
 {
 	"id":"cpclist_tbl",
 	"widgettype":"Tabular",
@@ -263,4 +269,6 @@
     }
 ]
 
+}
+    ]
 }

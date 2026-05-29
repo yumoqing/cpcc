@@ -1,4 +1,10 @@
-
+{
+    "widgettype": "VBox",
+    "options": {
+        "cheight": 40,
+        "width": "100%"
+    },
+    "subwidgets": [
 {
 	"id":"components_tbl",
 	"widgettype":"Tabular",
@@ -129,4 +135,6 @@
 
 	,"binds":[]
 
+}
+    ]
 }

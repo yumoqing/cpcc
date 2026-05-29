@@ -1,4 +1,10 @@
-
+{
+    "widgettype": "VBox",
+    "options": {
+        "cheight": 40,
+        "width": "100%"
+    },
+    "subwidgets": [
 {
 	"id":"cpcnode_tbl",
 	"widgettype":"Tabular",
@@ -185,4 +191,6 @@
 
 	,"binds":[]
 
+}
+    ]
 }
