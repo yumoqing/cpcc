@@ -1,8 +1,10 @@
 
 {
 	"id":"components_tbl",
-    "widgettype":"Tabular",
-    "options":{
+	"widgettype":"Tabular",
+	"options":{
+		"width":"100%",
+		"height":"100%",
 
 
 		"title":"部件表",
@@ -12,14 +14,22 @@
 
 		"css":"card",
 
+
 		"editable":{
+
 			"new_data_url":"{{entire_url('add_components.dspy')}}",
+
+
 			"delete_data_url":"{{entire_url('delete_components.dspy')}}",
+
+
 			"update_data_url":"{{entire_url('update_components.dspy')}}"
+
 		},
 
 
-        "data_url":"{{entire_url('./get_components.dspy')}}",
+		"data_url":"{{entire_url('./get_components.dspy')}}",
+
 		"data_method":"GET",
 		"data_params":{{json.dumps(params_kw, indent=4, ensure_ascii=False)}},
 		"row_options":{
@@ -69,7 +79,7 @@
         "valueField": "ccatelogid",
         "textField": "ccatelogid_text",
         "params": {
-            "dbname": "{{rfexe('get_module_dbname', 'cpcc')}}",
+            "dbname": "{{get_module_dbname('cpcc')}}",
             "table": "appcodes_kv",
             "tblvalue": "k",
             "tbltext": "v",
@@ -109,13 +119,13 @@
         "label": "计量值"
     }
 ]
-        },  
+		},  
 
 
 
-        "page_rows":160,
-        "cache_limit":5
-    }
+		"page_rows":160,
+		"cache_limit":5
+	}
 
 	,"binds":[]
 

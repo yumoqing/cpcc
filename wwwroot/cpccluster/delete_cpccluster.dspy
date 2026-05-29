@@ -1,33 +1,33 @@
 
 ns = {
-    'id':params_kw['id'],
+	'id':params_kw['id'],
 }
 
 
 db = DBPools()
-dbname = await rfexe('get_module_dbname', 'cpcc')
+dbname = get_module_dbname('cpcc')
 async with db.sqlorContext(dbname) as sor:
-    r = await sor.D('cpccluster', ns)
-    debug('delete success');
-    return {
-        "widgettype":"Message",
-        "options":{
-            "title":"Delete Success",
+	r = await sor.D('cpccluster', ns)
+	debug('delete success');
+	return {
+		"widgettype":"Message",
+		"options":{
+			"title":"Delete Success",
 			"timeout":3,
 			"cwidth":16,
 			"cheight":9,
-            "message":"ok，记得把关联的节点都解除占用状态 ~"
-        }
-    }
+			"message":"ok"
+		}
+	}
 
 debug('Delete failed');
 return {
-    "widgettype":"Error",
-    "options":{
-        "title":"Delete Error",
+	"widgettype":"Error",
+	"options":{
+		"title":"Delete Error",
 		"timeout":3,
 		"cwidth":16,
 		"cheight":9,
-        "message":"failed"
-    }
+		"message":"failed"
+	}
 }

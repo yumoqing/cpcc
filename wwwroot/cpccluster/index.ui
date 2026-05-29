@@ -1,239 +1,155 @@
+
 {
-    "id": "cpccluster_tbl",
-    "widgettype": "Tabular",
-    "options": {
-        "title": "算力集群",
-        "css": "card",
-        "toolbar": {
-            "tools": [
-                {
-                    "name": "newworker",
-                    "selected_row": true,
-                    "label": "新增工作节点"
-                },
-                {
-                    "name": "newpodyaml",
-                    "selected_row": true,
-                    "label": "新建资源YAML"
-                }
-            ],
-            "css": "float-right"
-        },
-        "editable": {
-            "new_data_url": "{{entire_url('add_cpccluster.dspy')}}",
-            "delete_data_url": "{{entire_url('delete_cpccluster.dspy')}}",
-            "update_data_url": "{{entire_url('update_cpccluster.dspy')}}"
-        },
-        "data_url": "{{entire_url('./get_cpccluster.dspy')}}",
-        "data_method": "GET",
-        "data_params": {{json.dumps(params_kw, indent=4, ensure_ascii=False)}},
-        "row_options": {
-            "browserfields": {
-                "exclouded": [
-                    "id",
-                    "cpcid",
-                    "clusterid"
-                ],
-                "alters": {}
-            },
-            "editexclouded": [
-                "id",
-                "cpcid",
-                "clusterid"
-            ],
-            "fields": [
-                {
-                    "name": "name",
-                    "title": "集群名称",
-                    "type": "str",
-                    "length": 255,
-                    "cwidth": 14,
-                    "uitype": "str",
-                    "datatype": "str",
-                    "label": "集群名称"
-                },
-                {
-                    "name": "controllerid",
-                    "title": "控制节点IP",
-                    "type": "str",
-                    "length": 32,
-                    "cwidth": 12,
-                    "label": "控制节点IP",
-                    "uitype": "code",
-                    "valueField": "controllerid",
-                    "textField": "controllerid_text",
-                    "params": {
-                        "dbname": "{{rfexe('get_module_dbname', 'cpcc')}}",
-                        "table": "cpcnode",
-                        "tblvalue": "id",
-                        "tbltext": "name",
-                        "valueField": "controllerid",
-                        "textField": "controllerid_text"
-                    },
-                    "dataurl": "{{entire_url('/appbase/get_code.dspy')}}"
-                },
-                {
-                    "name": "id",
-                    "title": "id",
-                    "type": "str",
-                    "length": 32,
-                    "cwidth": 18,
-                    "uitype": "str",
-                    "datatype": "str",
-                    "label": "id"
-                },
-                {
-                    "name": "cpcid",
-                    "title": "算力中心id",
-                    "type": "str",
-                    "length": 32,
-                    "nullable": "no",
-                    "cwidth": 10,
-                    "uitype": "str",
-                    "datatype": "str",
-                    "label": "算力中心id"
-                },
-                {
-                    "name": "clustertype",
-                    "title": "集群类型",
-                    "type": "str",
-                    "length": 1,
-                    "cwidth": 8,
-                    "label": "集群类型",
-                    "uitype": "code",
-                    "valueField": "clustertype",
-                    "textField": "clustertype_text",
-                    "params": {
-                        "dbname": "{{rfexe('get_module_dbname', 'cpcc')}}",
-                        "table": "appcodes_kv",
-                        "tblvalue": "k",
-                        "tbltext": "v",
-                        "valueField": "clustertype",
-                        "textField": "clustertype_text",
-                        "cond": "parentid='clustertype'"
-                    },
-                    "dataurl": "{{entire_url('/appbase/get_code.dspy')}}"
-                },
-                {
-                    "name": "clusterjoin",
-                    "title": "加入集群凭证",
-                    "type": "str",
-                    "length": 255,
-                    "cwidth": 45,
-                    "uitype": "str",
-                    "datatype": "str",
-                    "label": "加入集群凭证"
-                },
-                {
-                    "name": "enable_date",
-                    "title": "启用日期",
-                    "type": "date",
-                    "length": 0,
-                    "cwidth": 8,
-                    "uitype": "date",
-                    "datatype": "date",
-                    "label": "启用日期"
-                },
-                {
-                    "name": "export_date",
-                    "title": "停用日期",
-                    "type": "date",
-                    "length": 0,
-                    "cwidth": 8,
-                    "uitype": "date",
-                    "datatype": "date",
-                    "label": "停用日期"
-                }
-            ]
-        },
-        "content_view": {
-            "widgettype": "TabPanel",
-            "options": {
-                "tab_wide": "auto",
-                "height": "100%",
-                "width": "100%",
-                "tab_pos": "top",
-                "items": [
-                    {
-                        "name": "cpcpod",
-                        "label": "实时资源实例",
-                        "content": {
-                            "widgettype": "urlwidget",
-                            "options": {
-                                "params": {
-                                    "clusterid": "${id}",
-                                    "cpcid": "${cpcid}"
-                                },
-                                "url": "{{entire_url('..\/cpcpod')}}"
-                            }
-                        }
-                    },
-                    {
-                        "name": "cpcworker",
-                        "label": "实时集群节点",
-                        "content": {
-                            "widgettype": "urlwidget",
-                            "options": {
-                                "params": {
-                                    "clusterid": "${id}",
-                                    "cpcid": "${cpcid}"
-                                },
-                                "url": "{{entire_url('..\/cpcworker')}}"
-                            }
-                        }
-                    },
-                    {
-                        "name": "cpcyamlconfig",
-                        "label": "资源实例配置",
-                        "content": {
-                            "widgettype": "urlwidget",
-                            "options": {
-                                "params": {
-                                    "clusterid": "${id}",
-                                    "cpcid": "${cpcid}"
-                                },
-                                "url": "{{entire_url('..\/cpcpodyaml')}}"
-                            }
-                        }
-                    }
-                ]
-            }
-        },
-        "page_rows": 160,
-        "cache_limit": 5
-    },
-    "binds": [
+	"id":"cpccluster_tbl",
+	"widgettype":"Tabular",
+	"options":{
+		"width":"100%",
+		"height":"100%",
+
+
+		"title":"算力集群",
+
+
+
+
+		"css":"card",
+
+
+		"editable":{
+
+			"new_data_url":"{{entire_url('add_cpccluster.dspy')}}",
+
+
+			"delete_data_url":"{{entire_url('delete_cpccluster.dspy')}}",
+
+
+			"update_data_url":"{{entire_url('update_cpccluster.dspy')}}"
+
+		},
+
+
+		"data_url":"{{entire_url('./get_cpccluster.dspy')}}",
+
+		"data_method":"GET",
+		"data_params":{{json.dumps(params_kw, indent=4, ensure_ascii=False)}},
+		"row_options":{
+
+
+
+			"browserfields": {
+    "exclouded": [
+        "id",
+        "cpcid"
+    ],
+    "alters": {}
+},
+
+
+			"editexclouded":[
+    "id",
+    "cpcid"
+],
+
+			"fields":[
     {
-        "wid": "self",
-        "event": "newworker",
-        "actiontype": "urlwidget",
-        "target": "PopupWindow",
-        "popup_options": {
-            "width": "80%",
-            "height": "80%"
-        },
-        "options": {
-            "url": "{{entire_url('../cpcworker/new_worker.ui')}}",
-            "params": {
-                "id": "{{params_kw.id}}"
-            }
-        }
+        "name": "id",
+        "title": "id",
+        "type": "str",
+        "length": 32,
+        "cwidth": 18,
+        "uitype": "str",
+        "datatype": "str",
+        "label": "id"
     },
     {
-        "wid": "self",
-        "event": "newpodyaml",
-        "actiontype": "urlwidget",
-        "target": "PopupWindow",
-        "popup_options": {
-            "width": "80%",
-            "height": "80%"
+        "name": "name",
+        "title": "名称",
+        "type": "str",
+        "length": 255,
+        "cwidth": 18,
+        "uitype": "str",
+        "datatype": "str",
+        "label": "名称"
+    },
+    {
+        "name": "cpcid",
+        "title": "算力中心id",
+        "type": "str",
+        "length": 32,
+        "nullable": "no",
+        "cwidth": 18,
+        "uitype": "str",
+        "datatype": "str",
+        "label": "算力中心id"
+    },
+    {
+        "name": "clustertype",
+        "title": "集群类型",
+        "type": "str",
+        "length": 1,
+        "label": "集群类型",
+        "uitype": "code",
+        "valueField": "clustertype",
+        "textField": "clustertype_text",
+        "params": {
+            "dbname": "{{get_module_dbname('cpcc')}}",
+            "table": "appcodes_kv",
+            "tblvalue": "k",
+            "tbltext": "v",
+            "valueField": "clustertype",
+            "textField": "clustertype_text",
+            "cond": "parentid='clustertype'"
         },
-        "options": {
-            "url": "{{entire_url('../cpcpod/new_podyaml.ui')}}",
-            "params": {
-                "id": "{{params_kw.id}}"
-            }
-        }
+        "dataurl": "{{entire_url('/appbase/get_code.dspy')}}"
+    },
+    {
+        "name": "controllerid",
+        "title": "控制节点id",
+        "type": "str",
+        "length": 32,
+        "label": "控制节点id",
+        "uitype": "code",
+        "valueField": "controllerid",
+        "textField": "controllerid_text",
+        "params": {
+            "dbname": "{{get_module_dbname('cpcc')}}",
+            "table": "hostdev",
+            "tblvalue": "id",
+            "tbltext": "name",
+            "valueField": "controllerid",
+            "textField": "controllerid_text"
+        },
+        "dataurl": "{{entire_url('/appbase/get_code.dspy')}}"
+    },
+    {
+        "name": "enable_date",
+        "title": "启用日期",
+        "type": "date",
+        "length": 0,
+        "cwidth": 18,
+        "uitype": "date",
+        "datatype": "date",
+        "label": "启用日期"
+    },
+    {
+        "name": "export_date",
+        "title": "停用日期",
+        "type": "date",
+        "length": 0,
+        "cwidth": 18,
+        "uitype": "date",
+        "datatype": "date",
+        "label": "停用日期"
     }
-    ]
-}    
+]
+		},  
+
+
+
+		"page_rows":160,
+		"cache_limit":5
+	}
+
+	,"binds":[]
+
+}

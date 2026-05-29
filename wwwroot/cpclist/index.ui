@@ -1,209 +1,266 @@
+
 {
-    "id": "cpclist_tbl",
-    "widgettype": "Tabular",
-    "options": {
-        "title": "算力中心列表",
-        "toolbar": {
-            "tools": [
-                {
-                    "name": "newcluster",
-                    "selected_row": true,
-                    "label": "新建集群"
-                }
-            ]
-        },
-        "css": "card",
-        "editable": {
-            "new_data_url": "{{entire_url('add_cpclist.dspy')}}",
-            "delete_data_url": "{{entire_url('delete_cpclist.dspy')}}",
-            "update_data_url": "{{entire_url('update_cpclist.dspy')}}"
-        },
-        "data_url": "{{entire_url('./get_cpclist.dspy')}}",
-        "data_method": "GET",
-        "data_params": {{json.dumps(params_kw, indent=4, ensure_ascii=False)}},
-        "row_options": {
-            "browserfields": {
-                "exclouded": [
-                    "id",
-                    "orgid",
-                    "pcapi_url",
-                    "pcapi_user",
-                    "pcapi_pwd"
-                ],
-                "alters": {}
-            },
-            "editexclouded": [
-                "id",
-                "orgid"
-            ],
-            "fields": [
-                {
-                    "name": "id",
-                    "title": "id",
-                    "type": "str",
-                    "length": 32,
-                    "cwidth": 18,
-                    "uitype": "str",
-                    "datatype": "str",
-                    "label": "id"
-                },
-                {
-                    "name": "name",
-                    "title": "名称",
-                    "type": "str",
-                    "length": 255,
-                    "cwidth": 18,
-                    "uitype": "str",
-                    "datatype": "str",
-                    "label": "名称"
-                },
-                {
-                    "name": "orgid",
-                    "title": "属主机构id",
-                    "type": "str",
-                    "length": 32,
-                    "label": "属主机构id",
-                    "uitype": "code",
-                    "valueField": "orgid",
-                    "textField": "orgid_text",
-                    "params": {
-                        "dbname": "{{rfexe('get_module_dbname', 'cpcc')}}",
-                        "table": "organization",
-                        "tblvalue": "id",
-                        "tbltext": "orgname",
-                        "valueField": "orgid",
-                        "textField": "orgid_text"
-                    },
-                    "dataurl": "{{entire_url('/appbase/get_code.dspy')}}"
-                },
-                {
-                    "name": "pcapi_url",
-                    "title": "pcapi网址",
-                    "type": "str",
-                    "length": 500,
-                    "cwidth": 18,
-                    "uitype": "str",
-                    "datatype": "str",
-                    "label": "pcapi网址"
-                },
-                {
-                    "name": "api_user",
-                    "title": "接口用户",
-                    "type": "str",
-                    "length": 100,
-                    "cwidth": 18,
-                    "uitype": "str",
-                    "datatype": "str",
-                    "label": "接口用户"
-                },
-                {
-                    "name": "api_pwd",
-                    "title": "接口密码",
-                    "type": "str",
-                    "length": 100,
-                    "cwidth": 18,
-                    "uitype": "str",
-                    "datatype": "str",
-                    "label": "接口密码"
-                },
-                {
-                    "name": "enable_date",
-                    "title": "启用日期",
-                    "type": "date",
-                    "length": 0,
-                    "cwidth": 18,
-                    "uitype": "date",
-                    "datatype": "date",
-                    "label": "启用日期"
-                },
-                {
-                    "name": "expire_date",
-                    "title": "停用日期",
-                    "type": "date",
-                    "length": 0,
-                    "cwidth": 18,
-                    "uitype": "date",
-                    "datatype": "date",
-                    "label": "停用日期"
-                },
-                {
-                    "name": "contactname",
-                    "title": "联系人",
-                    "type": "str",
-                    "length": 100,
-                    "cwidth": 18,
-                    "uitype": "str",
-                    "datatype": "str",
-                    "label": "联系人"
-                },
-                {
-                    "name": "contactphone",
-                    "title": "联系电话",
-                    "type": "str",
-                    "length": 100,
-                    "cwidth": 18,
-                    "uitype": "str",
-                    "datatype": "str",
-                    "label": "联系电话"
-                }
-            ]
-        },
-        "content_view": {
-            "widgettype": "TabPanel",
-            "options": {
-                "tab_wide": "auto",
-                "height": "100%",
-                "width": "100%",
-                "tab_pos": "top",
-                "items": [
-                    {
-                        "name": "cpccluster",
-                        "label": "集群",
-                        "content": {
-                            "widgettype": "urlwidget",
-                            "options": {
-                                "params": {
-                                    "cpcid": "${id}"
-                                },
-                                "url": "{{entire_url('..\/cpccluster')}}"
-                            }
-                        }
-                    },
-                    {
-                        "name": "cpcnode",
-                        "label": "节点",
-                        "content": {
-                            "widgettype": "urlwidget",
-                            "options": {
-                                "params": {
-                                    "cpcid": "${id}"
-                                },
-                                "url": "{{entire_url('..\/cpcnode')}}"
-                            }
-                        }
-                    }
-                ]
-            }
-        },
-        "page_rows": 160,
-        "cache_limit": 5
-    },
-    "binds": [
+	"id":"cpclist_tbl",
+	"widgettype":"Tabular",
+	"options":{
+		"width":"100%",
+		"height":"100%",
+
+
+		"title":"算力中心列表",
+
+
+
+
+			"toolbar":{
+    "tools": [
         {
-            "wid": "self",
-            "event": "newcluster",
-            "actiontype": "urlwidget",
-            "target": "PopupWindow",
-            "popup_options": {
-                "width": "80%",
-                "height": "80%"
-            },
-            "options": {
-                "url": "{{entire_url('../handy/new_cluster.ui')}}",
-                "params": {
-                    "id": "{{params_kw.id}}"
-                }
-            }
+            "name": "newcluster",
+            "selected_row": true,
+            "label": "新建集群"
+        },
+        {
+            "selected_row": true,
+            "name": "cpccluster",
+            "icon": "{{entire_url('/imgs/cpccluster.svg')}}",
+            "label": "集群"
+        },
+        {
+            "selected_row": true,
+            "name": "cpcnode",
+            "icon": "{{entire_url('/imgs/cpcnode.svg')}}",
+            "label": "节点"
         }
     ]
-}    
+},
+
+		"css":"card",
+
+
+		"editable":{
+
+			"new_data_url":"{{entire_url('add_cpclist.dspy')}}",
+
+
+			"delete_data_url":"{{entire_url('delete_cpclist.dspy')}}",
+
+
+			"update_data_url":"{{entire_url('update_cpclist.dspy')}}"
+
+		},
+
+
+		"data_url":"{{entire_url('./get_cpclist.dspy')}}",
+
+		"data_method":"GET",
+		"data_params":{{json.dumps(params_kw, indent=4, ensure_ascii=False)}},
+		"row_options":{
+
+
+
+			"browserfields": {
+    "exclouded": [
+        "id",
+        "orgid",
+        "pcapi_url",
+        "pcapi_user",
+        "pcapi_pwd"
+    ],
+    "alters": {}
+},
+
+
+			"editexclouded":[
+    "id",
+    "orgid"
+],
+
+			"fields":[
+    {
+        "name": "id",
+        "title": "id",
+        "type": "str",
+        "length": 32,
+        "cwidth": 18,
+        "uitype": "str",
+        "datatype": "str",
+        "label": "id"
+    },
+    {
+        "name": "name",
+        "title": "名称",
+        "type": "str",
+        "length": 255,
+        "cwidth": 18,
+        "uitype": "str",
+        "datatype": "str",
+        "label": "名称"
+    },
+    {
+        "name": "orgid",
+        "title": "属主机构id",
+        "type": "str",
+        "length": 32,
+        "label": "属主机构id",
+        "uitype": "code",
+        "valueField": "orgid",
+        "textField": "orgid_text",
+        "params": {
+            "dbname": "{{get_module_dbname('cpcc')}}",
+            "table": "organization",
+            "tblvalue": "id",
+            "tbltext": "orgname",
+            "valueField": "orgid",
+            "textField": "orgid_text"
+        },
+        "dataurl": "{{entire_url('/appbase/get_code.dspy')}}"
+    },
+    {
+        "name": "pcapi_url",
+        "title": "pcapi网址",
+        "type": "str",
+        "length": 500,
+        "cwidth": 18,
+        "uitype": "str",
+        "datatype": "str",
+        "label": "pcapi网址"
+    },
+    {
+        "name": "api_user",
+        "title": "接口用户",
+        "type": "str",
+        "length": 100,
+        "cwidth": 18,
+        "uitype": "str",
+        "datatype": "str",
+        "label": "接口用户"
+    },
+    {
+        "name": "api_pwd",
+        "title": "接口密码",
+        "type": "str",
+        "length": 100,
+        "cwidth": 18,
+        "uitype": "password",
+        "datatype": "str",
+        "label": "接口密码"
+    },
+    {
+        "name": "enable_date",
+        "title": "启用日期",
+        "type": "date",
+        "length": 0,
+        "cwidth": 18,
+        "uitype": "date",
+        "datatype": "date",
+        "label": "启用日期"
+    },
+    {
+        "name": "expire_date",
+        "title": "停用日期",
+        "type": "date",
+        "length": 0,
+        "cwidth": 18,
+        "uitype": "date",
+        "datatype": "date",
+        "label": "停用日期"
+    },
+    {
+        "name": "contactname",
+        "title": "联系人",
+        "type": "str",
+        "length": 100,
+        "cwidth": 18,
+        "uitype": "str",
+        "datatype": "str",
+        "label": "联系人"
+    },
+    {
+        "name": "contactphone",
+        "title": "联系电话",
+        "type": "str",
+        "length": 100,
+        "cwidth": 18,
+        "uitype": "str",
+        "datatype": "str",
+        "label": "联系电话"
+    }
+]
+		},  
+
+
+
+		"page_rows":160,
+		"cache_limit":5
+	}
+
+	,"binds":[
+    {
+        "wid": "self",
+        "event": "newcluster",
+        "actiontype": "urlwidget",
+        "target": "PopupWindow",
+        "popup_options": {
+            "width": "80%",
+            "height": "80%"
+        },
+        "options": {
+            "url": "{{entire_url('../handy/new_cluster.ui')}}",
+            "params": {
+                "id": "{{params_kw.id}}"
+            }
+        }
+    },
+    {
+        "wid": "self",
+        "event": "cpccluster",
+        "actiontype": "urlwidget",
+        "target": "PopupWindow",
+        "popup_options": {
+            "title": "集群",
+            "icon": "{{entire_url('/appbase/get_icon.dspy')}}?id=cpccluster",
+            "resizable": true,
+            "height": "70%",
+            "width": "70%"
+        },
+        "params_mapping": {
+            "mapping": {
+                "id": "cpcid",
+                "referer_widget": "referer_widget"
+            },
+            "need_other": false
+        },
+        "options": {
+            "method": "POST",
+            "params": {},
+            "url": "{{entire_url('../cpccluster')}}"
+        }
+    },
+    {
+        "wid": "self",
+        "event": "cpcnode",
+        "actiontype": "urlwidget",
+        "target": "PopupWindow",
+        "popup_options": {
+            "title": "节点",
+            "icon": "{{entire_url('/appbase/get_icon.dspy')}}?id=cpcnode",
+            "resizable": true,
+            "height": "70%",
+            "width": "70%"
+        },
+        "params_mapping": {
+            "mapping": {
+                "id": "cpcid",
+                "referer_widget": "referer_widget"
+            },
+            "need_other": false
+        },
+        "options": {
+            "method": "POST",
+            "params": {},
+            "url": "{{entire_url('../cpcnode')}}"
+        }
+    }
+]
+
+}

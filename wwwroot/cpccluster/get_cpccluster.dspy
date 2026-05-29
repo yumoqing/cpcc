@@ -4,19 +4,19 @@ ns = params_kw.copy()
 
 debug(f'get_cpccluster.dspy:{ns=}')
 if not ns.get('page'):
-    ns['page'] = 1 
+	ns['page'] = 1 
 if not ns.get('sort'):
 
 	ns['sort'] = 'id'
 
+
 sql = '''select a.*, b.clustertype_text, c.controllerid_text
 from (select * from cpccluster where 1=1 [[filterstr]]) a left join (select k as clustertype, 
 			v as clustertype_text from appcodes_kv where parentid='clustertype') b on a.clustertype = b.clustertype left join (select id as controllerid, 
-			ip as controllerid_text from cpcnode where 1 = 1) c on a.controllerid = c.controllerid'''
+			name as controllerid_text from hostdev where 1 = 1) c on a.controllerid = c.controllerid'''
 
 filterjson = params_kw.get('data_filter')
-if not filterjson:
-	fields = [ f['name'] for f in [
+fields_str=r'''[
     {
         "name": "id",
         "title": "id",
@@ -60,7 +60,10 @@ if not filterjson:
         "type": "date",
         "length": 255
     }
-] ]
+]'''
+ori_fields = json.loads(fields_str)
+if not filterjson:
+	fields = [ f['name'] for f in ori_fields ]
 	filterjson = default_filterjson(fields, ns)
 filterdic = ns.copy()
 filterdic['filterstr'] = ''
@@ -81,10 +84,10 @@ sql = ac.convert(sql, filterdic)
 
 debug(f'{sql=}')
 db = DBPools()
-dbname = await rfexe('get_module_dbname', 'cpcc')
+dbname = get_module_dbname('cpcc')
 async with db.sqlorContext(dbname) as sor:
-    r = await sor.sqlPaging(sql, ns) 
-    return r
+	r = await sor.sqlPaging(sql, ns) 
+	return r
 return {
 	"total":0,
 	"rows":[]
