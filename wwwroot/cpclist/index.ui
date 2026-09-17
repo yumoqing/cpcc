@@ -224,7 +224,7 @@
         "target": "PopupWindow",
         "popup_options": {
             "title": "集群",
-            "icon": "{{entire_url('/appbase/get_icon.dspy')}}?id=cpccluster",
+            "icon": "{{entire_url('/appbase/show_icon.dspy')}}?id=cpccluster",
             "resizable": true,
             "height": "70%",
             "width": "70%"
@@ -249,7 +249,7 @@
         "target": "PopupWindow",
         "popup_options": {
             "title": "节点",
-            "icon": "{{entire_url('/appbase/get_icon.dspy')}}?id=cpcnode",
+            "icon": "{{entire_url('/appbase/show_icon.dspy')}}?id=cpcnode",
             "resizable": true,
             "height": "70%",
             "width": "70%"
